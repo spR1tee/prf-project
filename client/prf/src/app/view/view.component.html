@@ -1,0 +1,32 @@
+<mat-toolbar class="toolbar" color="gray">
+    <span>Prf-Blog</span>
+    <span class="example-spacer"></span>
+    <div class="menu">
+      <button mat-button (click)="navigate('/home')">Saját tartalmaim</button>
+      <button mat-button (click)="navigate('/edit')">Szerkesztői tartalmaim</button>
+      <button mat-button (click)="navigate('/view')">Nézői tartalmaim</button>
+      <button mat-button (click)="logout()">Kijelentkezés</button>
+    </div>
+</mat-toolbar>
+
+<div class="item-container">
+<mat-card *ngFor="let item of owned_contents" class="item-card">
+    <!-- Cím -->
+    <mat-card-header>
+      <mat-card-title>{{ item.title }}</mat-card-title>
+    </mat-card-header>
+  
+    <!-- Szöveges Tartalom -->
+    <mat-card-content>
+      <p>{{ item.content }}</p>
+    </mat-card-content>
+  
+    <!-- Editors Blokk -->
+    <mat-card-actions>
+      <p>Editors: {{ item.editors }}</p>
+    </mat-card-actions>
+  
+    <!-- Viewers Blokk -->
+    <mat-card-actions>
+      <p>Viewers: {{ item.viewers }}</p>
+    </mat-card-actions>

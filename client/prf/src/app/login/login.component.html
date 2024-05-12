@@ -1,0 +1,18 @@
+<div class="login-container">
+    <form class="login-form" (ngSubmit)="login()">
+        <input [(ngModel)]="email" name="email" type="email" placeholder="E-Mail cím" required />
+        <input [(ngModel)]="password" name="password" type="password" placeholder="Jelszó" required />
+        <div class="buttons">
+            <button type="submit" (click)="navigate('/home')">Bejelentkezés</button>
+        </div>
+        <div class="buttons">
+            <button type="button" (click)="navigate('/signup')">Regisztráció</button>
+        </div>
+        <!-- <div class="buttons">
+            <button type="button" routerLink="/signup">Sign Up</button>
+        </div> -->
+        <div *ngIf="errorMessage">
+            <p>{{errorMessage}}</p>
+        </div>
+    </form>
+</div>

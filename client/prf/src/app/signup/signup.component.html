@@ -1,0 +1,25 @@
+<div class="login-container">
+    <form class="login-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <input formControlName="email" type="email" placeholder="Email cím" required [ngClass]="{'invalid-input': signupForm.get('email')?.errors}" />
+        <div *ngIf="signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)">
+            <p *ngIf="signupForm.get('email')?.errors && signupForm.get('email')?.errors!['required']">Kötelezően kitöltendő mező.</p>
+            <p *ngIf="signupForm.get('email')?.errors && signupForm.get('email')?.errors!['email']">Nem érvényes Email cím.</p>
+        </div>
+        <input formControlName="password" type="password" placeholder="Jelszó" required [ngClass]="{'invalid-input': signupForm.get('password')?.errors}" />
+        <div *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
+            <p *ngIf="signupForm.get('password')?.errors && signupForm.get('password')?.errors!['required']">Kötelezően kitöltendő mező.</p>
+            <p *ngIf="signupForm.get('password')?.errors && signupForm.get('password')?.errors!['minlength']">A jelszó kevesebb mint 6 karakterből áll.</p>
+        </div>
+        <input formControlName="confirmPassword" type="password" placeholder="Jelszó újra" required [ngClass]="{'invalid-input': signupForm.get('confirmPassword')?.errors}" />
+        <div *ngIf="signupForm.get('confirmPassword')?.invalid && (signupForm.get('confirmPassword')?.dirty || signupForm.get('confirmPassword')?.touched)">
+            <p *ngIf="signupForm.get('confirmPassword')?.errors && signupForm.get('confirmPassword')?.errors!['required']">Kötelezően kitöltendő mező.</p>
+            <p *ngIf="signupForm.get('confirmPassword')?.errors && signupForm.get('confirmPassword')?.errors!['mustMatch']">A jelszavak nem egyeznek.</p>
+        </div>
+        <div class="buttons">
+            <button type="submit">Sign Up</button>
+        </div>
+        <div class="buttons">
+            <button type="reset" (click)="goBack()">Back</button>
+        </div>
+    </form>
+</div>
