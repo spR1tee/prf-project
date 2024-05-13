@@ -5,6 +5,7 @@ import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
 import { EditComponent } from './edit/edit.component';
 import { ViewComponent } from './view/view.component';
+import { EditContentComponent } from './edit-content/edit-content.component';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import { ViewComponent } from './view/view.component';
             SignupComponent,
             HomeComponent,
             EditComponent,
-            ViewComponent
+            ViewComponent,
+            EditContentComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

@@ -1,0 +1,14 @@
+<div class="login-container">
+    <form class="login-form" [formGroup]="contentForm" (ngSubmit)="onSubmit()">
+        <input formControlName="title" type="text" placeholder="Cím" required/>
+        <input formControlName="content" type="text" placeholder="Tartalom" required>
+        <input formControlName="editors" type="text" placeholder="Szerkesztők">
+        <input formControlName="viewers" type="text" placeholder="Nézők"/>
+        <div class="buttons">
+            <button type="submit">Változtatások mentése</button>
+        </div>
+        <div class="buttons">
+            <button type="reset" (click)="goBack()">Mégse</button>
+        </div>
+    </form>
+</div>

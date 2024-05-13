@@ -10,23 +10,29 @@
 </mat-toolbar>
 
 <div class="item-container">
-<mat-card *ngFor="let item of owned_contents" class="item-card">
-    <!-- Cím -->
-    <mat-card-header>
-      <mat-card-title>{{ item.title }}</mat-card-title>
-    </mat-card-header>
+  <mat-card *ngFor="let item of owned_contents" class="item-card">
+      <!-- Cím -->
+      <mat-card-header>
+        <mat-card-title>Tulajdonos: {{ item.owner }}</mat-card-title>
+      </mat-card-header>
   
-    <!-- Szöveges Tartalom -->
-    <mat-card-content>
-      <p>{{ item.content }}</p>
-    </mat-card-content>
-  
-    <!-- Editors Blokk -->
-    <mat-card-actions>
-      <p>Editors: {{ item.editors }}</p>
-    </mat-card-actions>
-  
-    <!-- Viewers Blokk -->
-    <mat-card-actions>
-      <p>Viewers: {{ item.viewers }}</p>
-    </mat-card-actions>
+      <mat-card-header>
+        <mat-card-title>Cím: {{ item.title }}</mat-card-title>
+      </mat-card-header>
+    
+      <!-- Szöveges Tartalom -->
+      <mat-card-content>
+        <p>Tartalom: {{ item.content }}</p>
+      </mat-card-content>
+    
+      <!-- Editors Blokk -->
+      <mat-card-header>
+        <mat-card-title>Szerkesztők: {{ item.editors }}</mat-card-title>
+      </mat-card-header>
+    
+      <!-- Viewers Blokk -->
+      <mat-card-header>
+        <mat-card-title>Nézők: {{ item.viewers }}</mat-card-title>
+      </mat-card-header>
+    </mat-card>
+  </div>

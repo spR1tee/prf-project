@@ -13,6 +13,10 @@
 <mat-card *ngFor="let item of owned_contents" class="item-card">
     <!-- Cím -->
     <mat-card-header>
+      <mat-card-title>Tulajdonos: {{ item.owner }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-header>
       <mat-card-title>Cím: {{ item.title }}</mat-card-title>
     </mat-card-header>
   
@@ -22,14 +26,14 @@
     </mat-card-content>
   
     <!-- Editors Blokk -->
-    <mat-card-actions>
-      <p>Editors: {{ item.editors }}</p>
-    </mat-card-actions>
+    <mat-card-header>
+      <mat-card-title>Szerkesztők: {{ item.editors }}</mat-card-title>
+    </mat-card-header>
   
     <!-- Viewers Blokk -->
-    <mat-card-actions>
-      <p>Viewers: {{ item.viewers }}</p>
-    </mat-card-actions>
+    <mat-card-header>
+      <mat-card-title>Nézők: {{ item.viewers }}</mat-card-title>
+    </mat-card-header>
   
     <!-- Szerkesztés és Törlés Gombok -->
     <mat-card-actions>
@@ -47,9 +51,6 @@
         <input formControlName="viewers" type="text" placeholder="Nézők"/>
         <div class="buttons">
             <button type="submit">Tartalom létrehozása</button>
-        </div>
-        <div class="buttons">
-            <button type="reset" (click)="goBack()">Back</button>
         </div>
     </form>
 </div>

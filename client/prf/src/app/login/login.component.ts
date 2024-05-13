@@ -25,7 +25,6 @@ export class LoginComponent {
       this.authService.login(this.email, this.password).subscribe({
         next: (data) => {
           if (data) {
-            this.authService.updateString(this.email);
             console.log(data, "success");
             this.router.navigateByUrl('/home');
           }

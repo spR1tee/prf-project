@@ -3,81 +3,77 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router} from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { ContentService } from '../shared/services/content.service';
 import { AuthService } from '../shared/services/auth.service';
-import { Content } from '../shared/model/content';
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [MatToolbarModule,
-            MatListModule,
-            MatButtonModule,
-            ReactiveFormsModule,
-            CommonModule, 
-            FormsModule,
-            MatCardModule],
+    MatListModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    MatCardModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 
-export class HomeComponent implements OnInit{
-  owned_contents!: Content[];
-  sorted_contents?: Content[];
-  stringSubscription!: Subscription | undefined;
-  
+export class HomeComponent implements OnInit {
+  owned_contents!: any;
+  user?: any;
+  current_logged_in!: any;
+
   contentForm!: FormGroup;
-  current_user = "";
   displayedColumns: string[] = ['title', 'content', 'editors', 'viewers'];
 
   constructor(private formBuilder: FormBuilder, private location: Location, private router: Router, private contentService: ContentService, private authService: AuthService) { }
 
   ngOnInit() {
-    this.stringSubscription = this.authService.getString().subscribe(
-      string => {
-        if (string !== "") {
-          this.current_user = string;
-        }
-      }
-    );
-
-  this.stringSubscription.unsubscribe();
-      console.log(this.authService.email_string);
       this.contentForm = this.formBuilder.group({
       title: ['', [Validators.required]],
-      content: [''],
-      editors: ['', [Validators.email]],
-      viewers: ['', [Validators.email]],
+      content: ['', [Validators.required]],
+      editors: [''],
+      viewers: ['']
     })
 
-    this.contentService.getAll().subscribe({
-      next: (data) => {
-        this.owned_contents = data;
-        this.sort_data(this.owned_contents);
+    this.authService.getUser().subscribe(
+      data => {
+        this.current_logged_in = data;
+        console.log("getUser:")
         console.log(data);
-      }, error: (err) => {
-        console.log(err);
+        console.log(this.current_logged_in[0]);
+        this.show_data();
       }
-    })
+    );
   }
 
-  sort_data(contents: Content[]) {
-    for(let i = 0; i < contents.length; i++) {
-      if (contents[i].owner === this.authService.email_string) {
-        this.sorted_contents?.push(contents[i]);
+  show_data() {
+    this.authService.getUserById(this.current_logged_in[0].toString()).subscribe(
+      data => {
+        console.log("getuserbyid:");
+        this.user = data;
+        this.contentService.getOwnedContent(this.user.email.toString()).subscribe({
+          next: (data) => {
+            this.owned_contents = data;
+            console.log(data);
+          }, error: (err) => {
+            console.log(err);
+          }
+        });
       }
-    }
+    );
   }
 
   onSubmit() {
     if (this.contentForm.valid) {
       console.log('Form data:', this.contentForm.value);
-      this.contentService.create(this.contentForm.value).subscribe({
+      this.contentService.create(this.contentForm.value, this.user.email).subscribe({
         next: (data) => {
           console.log(data);
           location.reload();
@@ -90,24 +86,25 @@ export class HomeComponent implements OnInit{
     }
   }
 
- deleteItem(item: any) {
+  deleteItem(item: any) {
     this.contentService.delete(item.title).subscribe({
-    next: (data) => {
-      console.log(data);
-      location.reload();
-    }, error: (err) => {
-      console.log(err);
-    }
-  })
- }
+      next: (data) => {
+        console.log(data);
+        location.reload();
+      }, error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 
-editItem(item: any) {
+  editItem(item: any) {
+      this.contentService.changeData(item);
+      this.router.navigateByUrl('/edit_content');
+  }
 
- }
-
-navigate(to: string) {
-  this.router.navigateByUrl(to);
-}
+  navigate(to: string) {
+    this.router.navigateByUrl(to);
+  }
 
   logout() {
     this.authService.logout().subscribe({

@@ -1,15 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../model/user';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  private sharedString = new BehaviorSubject<string>('');
-  email_string!: string;
 
   constructor(private http: HttpClient) {}
 
@@ -22,14 +18,6 @@ export class AuthService {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
     return this.http.post('http://localhost:5000/login', body, {headers: headers, withCredentials: true});
-  }
-
-  getString() {
-    return this.sharedString.asObservable();
-  }
-
-  updateString(newString: string) {
-    this.sharedString.next(newString);
   }
 
   register(user: User) {
@@ -50,5 +38,13 @@ export class AuthService {
 
   checkAuth() {
     return this.http.get<boolean>('http://localhost:5000/checkAuth', {withCredentials: true});
+  }
+
+  getUser() {
+    return this.http.get('http://localhost:5000/getUser', {withCredentials: true});
+  }
+
+  getUserById(id: string) {
+    return this.http.get('http://localhost:5000/getUserById?id=' + id, {withCredentials: true});
   }
 }

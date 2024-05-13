@@ -62,9 +62,11 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
         const owner = req.body.owner;
         const title = req.body.title;
         const content = req.body.content;
-        const editors = req.body.editors;
-        const viewers = req.body.viewers;
-        const c_content = new Content({owner: owner, title: title, content: content, editors: editors, viewers: viewers});
+        let editors = req.body.editors;
+        const splitted = editors.toString().split(",");
+        let viewers = req.body.viewers;
+        const splitted_2 = viewers.toString().split(",");
+        const c_content = new Content({owner: owner, title: title, content: content, editors: splitted, viewers: splitted_2});
         c_content.save().then(data => {
             res.status(200).send(data);
         }).catch(error => {
@@ -76,13 +78,27 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
         const owner = req.body.owner;
         const title = req.body.title;
         const content = req.body.content;
-        const editors = req.body.editors;
-        const viewers = req.body.viewers;
-        const c_content = new Content({owner: owner, title: title, content: content, editors: editors, viewers: viewers});
-        c_content.save().then(data => {
+        let editors = req.body.editors;
+        const splitted = editors.toString().split(",");
+        let viewers = req.body.viewers;
+        const splitted_2 = viewers.toString().split(",");
+        const id = req.query.id;
+        const c_content = new Content({owner: owner, title: title, content: content, editors: splitted, viewers: splitted_2});
+        const query = Content.updateOne(
+            { id : id },
+            { $set: { 
+                owner : owner,
+                title : title,
+                content : content,
+                editors : splitted,
+                viewers : splitted_2    
+            }}
+        );
+        query.then(data => {
             res.status(200).send(data);
         }).catch(error => {
-            res.status(500).send(error);
+            console.log(error);
+            res.status(500).send('Internal server error.');
         })
     });
 
@@ -135,6 +151,74 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
             res.status(200).send(true);            
         } else {
             res.status(500).send(false);
+        }
+    });
+
+    router.get('/getUser', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            res.status(200).send([req.user]);            
+        } else {
+            res.status(500).send("User is not authenticated");
+        }
+    });
+
+    router.get('/getUserById', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const id = req.query.id;
+            const query = User.findOne({_id: id});
+            query.then(data => {
+                res.status(200).send(data);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send('Internal server error.');
+            })
+        } else {
+            res.status(500).send('User is not logged in.');
+        }
+    });
+
+    router.get('/getOwnedContent', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const id = req.query.id;
+            const query = Content.find({owner: id});
+            query.then(data => {
+                res.status(200).send(data);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send('Internal server error.');
+            })
+        } else {
+            res.status(500).send('User is not logged in.');
+        }
+    });
+
+    router.get('/getEditContent', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const id = req.query.id;
+            const query = Content.find({editors: { $in: [id] }});
+            query.then(data => {
+                res.status(200).send(data);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send('Internal server error.');
+            })
+        } else {
+            res.status(500).send('User is not logged in.');
+        }
+    });
+
+    router.get('/getViewContent', (req: Request, res: Response) => {
+        if (req.isAuthenticated()) {
+            const id = req.query.id;
+            const query = Content.find({viewers: { $in: [id] }});
+            query.then(data => {
+                res.status(200).send(data);
+            }).catch(error => {
+                console.log(error);
+                res.status(500).send('Internal server error.');
+            })
+        } else {
+            res.status(500).send('User is not logged in.');
         }
     });
 

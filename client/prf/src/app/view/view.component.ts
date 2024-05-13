@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { ContentService } from '../shared/services/content.service';
 import { AuthService } from '../shared/services/auth.service';
-import { Content } from '../shared/model/content';
 import { FormsModule } from '@angular/forms'
 import { MatCardModule } from '@angular/material/card';
 
@@ -24,42 +23,42 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './view.component.html',
   styleUrl: './view.component.scss'
 })
-export class ViewComponent {
-  owned_contents!: Content[];
-  sorted_contents?: Content[];
+export class ViewComponent implements OnInit{
+  owned_contents!: any;
+  user?: any;
+  current_logged_in!: any;
   
-  current_user = "";
   displayedColumns: string[] = ['title', 'content', 'editors', 'viewers'];
 
   constructor(private formBuilder: FormBuilder, private location: Location, private router: Router, private contentService: ContentService, private authService: AuthService) { }
 
   ngOnInit() {
-    this.authService.getString().subscribe(
-      string => {
-        if (string !== "") {
-          this.current_user = string;
-        }
+    this.authService.getUser().subscribe(
+      data => {
+        this.current_logged_in = data;
+        console.log("getUser:")
+        console.log(data);
+        console.log(this.current_logged_in[0]);
+        this.show_data();
       }
     );
-    console.log(this.current_user);
-
-    this.contentService.getAll().subscribe({
-      next: (data) => {
-        this.owned_contents = data;
-        this.sort_data(this.owned_contents);
-        console.log(data);
-      }, error: (err) => {
-        console.log(err);
-      }
-    })
   }
 
-  sort_data(contents: Content[]) {
-    for(let i = 0; i < contents.length; i++) {
-      if (contents[i].editors.includes(this.current_user)) {
-        this.sorted_contents?.push(contents[i]);
+  show_data() {
+    this.authService.getUserById(this.current_logged_in[0].toString()).subscribe(
+      data => {
+        console.log("getuserbyid:");
+        this.user = data;
+        this.contentService.getViewContent(this.user.email.toString()).subscribe({
+          next: (data) => {
+            this.owned_contents = data;
+            console.log(data);
+          }, error: (err) => {
+            console.log(err);
+          }
+        });
       }
-    }
+    );
   }
 
   navigate(to: string) {
