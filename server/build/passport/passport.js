@@ -21,7 +21,7 @@ const configurePassport = (passport) => {
                         done('Incorrect username or password.');
                     }
                     else {
-                        done(null, user._id);
+                        done(null, user);
                     }
                 });
             }
