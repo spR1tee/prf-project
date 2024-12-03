@@ -2,7 +2,7 @@
 
 sudo docker build -t my_mongo_image .
 
-sudo docker run -d --name mongo -p 6000:27017 my_mongo_image:latest
+sudo docker run -it --name mongo -p 6000:27017 my_mongo_image:latest
 
 sudo docker start mongo
 
