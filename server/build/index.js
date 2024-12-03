@@ -14,7 +14,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 5000;
-const dbUrl = 'mongodb://0.0.0.0:27017/db';
+const dbUrl = 'mongodb://localhost:6000/db';
 mongoose_1.default.connect(dbUrl).then((_) => {
     console.log('Successfully connected to MongoDB.');
 }).catch(error => {
