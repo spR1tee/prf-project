@@ -1,0 +1,106 @@
+pipeline {
+    agent any
+    
+    environment { NVM_DIR = "${env.WORKSPACE}/.nvm" }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/spR1tee/prf-project.git'
+            }
+        }
+        
+        stage('Setup NVM and Install Node.js') { 
+            steps {
+                sh ''' 
+                    mkdir -p ${NVM_DIR}
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash 
+                    export NVM_DIR="${NVM_DIR}"
+                    [ -s "${NVM_DIR}/nvm.sh" ] && \\. "${NVM_DIR}/nvm.sh" 
+                    [ -s "${NVM_DIR}/bash_completion" ] && \\. "${NVM_DIR}/bash_completion"
+                    . ${NVM_DIR}/nvm.sh
+                    nvm install 16
+                '''
+            } 
+        }
+        
+        
+        stage('Run MongoDB Docker Container') {
+            steps {
+                dir('server') {
+                    sh 'sudo docker build -t my_mongo_image .'
+                    sh 'sudo docker run -d --name mongo -p 6000:27017 my_mongo_image:latest'
+                    sh 'sudo docker start mongo'
+                }
+            }
+        }
+
+        stage('Build Server') {
+            steps {
+                dir('server') {
+                    sh '''
+                        export NVM_DIR="${NVM_DIR}"
+                        [ -s "${NVM_DIR}/nvm.sh" ] && \\. "${NVM_DIR}/nvm.sh"
+                        . ${NVM_DIR}/nvm.sh
+                        nvm use 16
+                        npm install
+                        npm run build
+                    '''
+                }
+            }
+        }
+
+        stage('Start Server') {
+            steps {
+                dir('server') {
+                    sh '''
+                        export NVM_DIR="${NVM_DIR}"
+                        [ -s "${NVM_DIR}/nvm.sh" ] && \\. "${NVM_DIR}/nvm.sh"
+                        . ${NVM_DIR}/nvm.sh
+                        nvm use 16
+                        npm run start &
+                    '''
+                }
+            }
+        }
+
+        stage('Build Client') {
+            steps {
+                dir('client') {
+                    dir('prf') {
+                        sh '''
+                            export NVM_DIR="${NVM_DIR}"
+                            [ -s "${NVM_DIR}/nvm.sh" ] && \\. "${NVM_DIR}/nvm.sh"
+                            . ${NVM_DIR}/nvm.sh
+                            nvm use 16
+                            npm install
+                        '''                     
+                    }
+                }
+            }
+        }
+
+        stage('Start Client') {
+            steps {
+                dir('client') {
+                    dir('prf') {
+                        sh '''
+                            export NVM_DIR="${NVM_DIR}"
+                            [ -s "${NVM_DIR}/nvm.sh" ] && \\. "${NVM_DIR}/nvm.sh"
+                            . ${NVM_DIR}/nvm.sh
+                            npm install -g @angular/cli@14
+                            ng serve &
+                        '''  
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'sudo docker stop mongo'
+            sh 'sudo docker rm mongo'
+        }
+    }
+}

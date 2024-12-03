@@ -3,7 +3,6 @@ import { PassportStatic } from 'passport';
 import { User } from '../model/user';
 import { Content } from '../model/content';
 
-
 export const configureRoutes = (passport: PassportStatic, router: Router): Router => {
 
     router.get('/', (req: Request, res: Response) => {

@@ -47,14 +47,14 @@ export class HomeComponent implements OnInit {
         this.current_logged_in = data;
         console.log("getUser:")
         console.log(data);
-        console.log(this.current_logged_in[0]);
+        console.log(this.current_logged_in[0]._id);
         this.show_data();
       }
     );
   }
 
   show_data() {
-    this.authService.getUserById(this.current_logged_in[0].toString()).subscribe(
+    this.authService.getUserById(this.current_logged_in[0]._id.toString()).subscribe(
       data => {
         console.log("getuserbyid:");
         this.user = data;
