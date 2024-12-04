@@ -12,6 +12,13 @@ const app = express();
 const port = 5000;
 const dbUrl = 'mongodb://172.100.0.30:27017/db';
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+
 mongoose.connect(dbUrl).then((_) => {
     console.log('Successfully connected to MongoDB.');
 }).catch(error => {
@@ -28,10 +35,13 @@ const corsOptions = {
             callback(new Error('Not allowed by CORS.'));
         }
     },
-    credentials: true
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(bodyParser.urlencoded({extended: true}));
 

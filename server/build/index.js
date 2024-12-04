@@ -14,14 +14,19 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 5000;
-const dbUrl = 'mongodb://localhost:6000/db';
+const dbUrl = 'mongodb://172.100.0.30:27017/db';
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 mongoose_1.default.connect(dbUrl).then((_) => {
     console.log('Successfully connected to MongoDB.');
 }).catch(error => {
     console.log(error);
     return;
 });
-const whitelist = ['*', 'http://localhost:4200'];
+const whitelist = ['*', 'http://172.100.0.20:4200'];
 const corsOptions = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || whitelist.includes('*')) {
@@ -31,9 +36,12 @@ const corsOptions = {
             callback(new Error('Not allowed by CORS.'));
         }
     },
-    credentials: true
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
 };
 app.use((0, cors_1.default)(corsOptions));
+app.options('*', (0, cors_1.default)(corsOptions));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 const sessionOptions = {
