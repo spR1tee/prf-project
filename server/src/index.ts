@@ -40,8 +40,15 @@ const corsOptions = {
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Methods'
 };
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+const corsOptions1 = {   origin: 'http://172.100.0.20:4200',
+                        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+                        allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization' 
+                    };
+
+app.use(cors(corsOptions1));
+app.options('*', cors(corsOptions1));
+
+app.use(express.json());
 
 app.use(bodyParser.urlencoded({extended: true}));
 
