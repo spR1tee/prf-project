@@ -12,12 +12,6 @@ const app = express();
 const port = 5000;
 const dbUrl = 'mongodb://172.100.0.30:27017/db';
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
 
 mongoose.connect(dbUrl).then((_) => {
     console.log('Successfully connected to MongoDB.');
@@ -36,8 +30,6 @@ const corsOptions = {
         }
     },
     credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Methods'
 };
 
 const corsOptions1 = {   origin: 'http://172.100.0.20:4200',
@@ -45,10 +37,14 @@ const corsOptions1 = {   origin: 'http://172.100.0.20:4200',
                         allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization' 
                     };
 
-app.use(cors(corsOptions1));
-app.options('*', cors(corsOptions1));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
-app.use(express.json());
+app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({extended: true}));
 
