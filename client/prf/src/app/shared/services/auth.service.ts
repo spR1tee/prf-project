@@ -26,14 +26,13 @@ export class AuthService {
     const body = new URLSearchParams();
     body.set('email', user.email);
     body.set('password', user.password);
-    console.log("hello1_Teszt");
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
+    console.log(headers);
 
-    return this.http.post('http://172.100.0.10:5000/register', body, {headers: headers});
-  }
+    return this.http.post('http://172.100.0.10:5000/register', body, {headers: headers})}
 
   logout() {
     return this.http.post('http://172.100.0.10:5000/logout', {}, {withCredentials: true, responseType: 'text'});

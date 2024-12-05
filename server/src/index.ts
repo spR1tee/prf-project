@@ -21,7 +21,7 @@ mongoose.connect(dbUrl).then((_) => {
     return;
 });
 
-const whitelist = ['*', 'http://172.100.0.20:4200']
+const whitelist = ['*', 'http://172.100.0.20:4200', 'http://172.100.0.10:5000']
 const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allowed?: boolean) => void) => {
         if (whitelist.indexOf(origin!) !== -1 || whitelist.includes('*')) {
@@ -41,8 +41,8 @@ app.use(cookieParser());
 
 const sessionOptions: expressSession.SessionOptions = {
     secret: 'totallysecretsomething',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false
 };
 app.use(expressSession(sessionOptions));
 
@@ -56,3 +56,5 @@ app.use('/', configureRoutes(passport, express.Router()));
 app.listen(port, () => {
     console.log('Server is listening on port ' + port.toString());
 });
+
+console.log('After server is ready.');
