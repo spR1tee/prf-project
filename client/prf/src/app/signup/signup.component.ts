@@ -52,6 +52,7 @@ export class SignupComponent implements OnInit {
           console.log(data);
           this.router.navigateByUrl('/login');
         }, error: (err) => {
+          console.log("itt a hiba");
           console.log(err);
         }
       });

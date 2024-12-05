@@ -15,26 +15,21 @@ export class AuthService {
     body.set('password', password);
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': 'true',
-      'Access-Control-Allow-Methods': 'OPTIONS, GET, POST',
-      'Access-Control-Allow-Headers': 'Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control'
+      'Content-Type': 'application/x-www-form-urlencoded'
     });
+
     return this.http.post('http://172.100.0.10:5000/login', body, {headers: headers, withCredentials: true});
   }
 
   register(user: User) {
+    console.log("eljutottunk registerig");
     const body = new URLSearchParams();
     body.set('email', user.email);
     body.set('password', user.password);
+    console.log("hello1_Teszt");
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': 'true',
-      'Access-Control-Allow-Methods': 'OPTIONS, GET, POST',
-      'Access-Control-Allow-Headers': 'Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control'
+      'Content-Type': 'application/x-www-form-urlencoded'
     });
 
     return this.http.post('http://172.100.0.10:5000/register', body, {headers: headers});

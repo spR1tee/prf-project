@@ -1,8 +1,9 @@
 import express from 'express';
+import { Request, Response } from 'express';
 import { configureRoutes } from './routes/routes';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import expressSession from 'express-session';
+import expressSession  from 'express-session';
 import passport from 'passport';
 import { configurePassport } from './passport/passport';
 import mongoose from 'mongoose';
@@ -31,13 +32,6 @@ const corsOptions = {
     },
     credentials: true
 };
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET ,HEAD, OPTIONS, POST, PUT");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
-});
 
 app.use(cors(corsOptions));
 
