@@ -32,11 +32,11 @@ const corsOptions = {
     credentials: true
 };
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://172.100.0.10:5000/register"); // update to match the domain you will make the request from
+/*app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://172.100.0.10:5000/register");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-  });
+  });*/
 
 app.use(cors(corsOptions));
 
