@@ -151,6 +151,7 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
         if (req.isAuthenticated()) {
             res.status(200).send(true);            
         } else {
+            console.log("error check auth");
             res.status(500).send(false);
         }
     });
