@@ -42,6 +42,7 @@ export class AuthService {
     body.set('password', user.password);
 
     const headers = new HttpHeaders({
+      'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
