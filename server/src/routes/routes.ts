@@ -21,6 +21,10 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
         } 
     });
 
+    router.get('/test', async (req: Request, res: Response) => {
+        res.status(200).send("szia");
+    });
+
     router.post('/login', (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('local', (error: string | null, user: typeof User) => {
             if (error) {
