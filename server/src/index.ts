@@ -59,13 +59,6 @@ app.use(passport.session());
 
 configurePassport(passport);
 
-app.get('/metrics', async (req: Request, res: Response) => {
-    try { res.set('Content-Type', client.register.contentType);
-            res.end(await client.register.metrics());
-    } catch (ex) {
-        res.status(500).end(ex); 
-    } 
-});
 
 app.use('/', configureRoutes(passport, express.Router()));
 

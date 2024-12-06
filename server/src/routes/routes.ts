@@ -2,11 +2,23 @@ import { Router, Request, Response, NextFunction } from "express";
 import { PassportStatic } from 'passport';
 import { User } from '../model/user';
 import { Content } from '../model/content';
+import client from 'prom-client';
 
 export const configureRoutes = (passport: PassportStatic, router: Router): Router => {
 
+    const collectDefaultMetrics = client.collectDefaultMetrics; 
+    collectDefaultMetrics();
+
     router.get('/', (req: Request, res: Response) => {
         res.status(200).send('Hello, World!');
+    });
+
+    router.get('/metrics', async (req: Request, res: Response) => {
+        try { res.set('Content-Type', client.register.contentType);
+                res.end(await client.register.metrics());
+        } catch (ex) {
+            res.status(500).end(ex); 
+        } 
     });
 
     router.post('/login', (req: Request, res: Response, next: NextFunction) => {
@@ -224,7 +236,7 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
         }
     });
 
-    
+
 
     return router;
 }
