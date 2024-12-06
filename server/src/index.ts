@@ -7,14 +7,10 @@ import passport from 'passport';
 import { configurePassport } from './passport/passport';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import client from 'prom-client';
 
 const app = express();
 const port = 5000;
 const dbUrl = 'mongodb://172.100.0.30:27017/my_db';
-
-const collectDefaultMetrics = client.collectDefaultMetrics; 
-collectDefaultMetrics();
 
 mongoose.connect(dbUrl).then((_) => {
     console.log('Successfully connected to MongoDB.');
@@ -35,12 +31,6 @@ const corsOptions = {
     credentials: true
 };
 
-/*app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://172.100.0.10:5000/register");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });*/
-
 app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -49,8 +39,9 @@ app.use(cookieParser());
 
 const sessionOptions: expressSession.SessionOptions = {
     secret: 'totallysecretsomething',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
 };
 app.use(expressSession(sessionOptions));
 

@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
   show_data() {
     this.authService.getUserById(this.current_logged_in[0]._id.toString()).subscribe(
       data => {
-        console.log("getuserbyid:");
+        console.log("getusercontentbyid:");
         this.user = data;
         this.contentService.getOwnedContent(this.user.email.toString()).subscribe({
           next: (data) => {
@@ -77,6 +77,7 @@ export class HomeComponent implements OnInit {
         next: (data) => {
           console.log(data);
           location.reload();
+          this.router.navigateByUrl('/home');
         }, error: (err) => {
           console.log(err);
         }
