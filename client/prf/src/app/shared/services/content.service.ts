@@ -25,6 +25,7 @@ export class ContentService {
     body.set('viewers', content.viewers);
 
     const headers = new HttpHeaders({
+      'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
@@ -40,6 +41,7 @@ export class ContentService {
     body.set('viewers', content.viewers);
 
     const headers = new HttpHeaders({
+      'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 

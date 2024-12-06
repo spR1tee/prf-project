@@ -46,8 +46,8 @@ app.use(cookieParser());
 
 const sessionOptions: expressSession.SessionOptions = {
     secret: 'totallysecretsomething',
-    resave: false,
-    saveUninitialized: false
+    resave: true,
+    saveUninitialized: true
 };
 app.use(expressSession(sessionOptions));
 
