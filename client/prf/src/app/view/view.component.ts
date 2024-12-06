@@ -45,7 +45,7 @@ export class ViewComponent implements OnInit{
   }
 
   show_data() {
-    this.authService.getUserById(this.current_logged_in[0].toString()).subscribe(
+    this.authService.getUserById(this.current_logged_in[0]._id.toString()).subscribe(
       data => {
         console.log("getuserbyid:");
         this.user = data;
