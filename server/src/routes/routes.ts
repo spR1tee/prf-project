@@ -224,5 +224,7 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
         }
     });
 
+    
+
     return router;
 }
