@@ -2,7 +2,8 @@ import { Router, Request, Response, NextFunction } from "express";
 import { PassportStatic } from 'passport';
 import { User } from '../model/user';
 import { Content } from '../model/content';
-import client from 'prom-client'; // Importáljuk a prom-client csomagot 
+import client from 'prom-client'; // Importáljuk a prom-client csomagot
+ 
 // Kérés időtartam mérése histogrammal
 const httpRequestDurationMicroseconds = new client.Histogram({
      name: 'http_request_duration_ms', 
