@@ -77,7 +77,8 @@ export class HomeComponent implements OnInit {
       this.contentService.create(this.contentForm.value, this.user.email).subscribe({
         next: (data) => {
           console.log(data);
-          this.show_data();
+          location.reload();
+          this.router.navigateByUrl('/home');
         }, error: (err) => {
           console.log(err);
         }
@@ -91,7 +92,8 @@ export class HomeComponent implements OnInit {
     this.contentService.delete(item.title).subscribe({
       next: (data) => {
         console.log(data);
-        this.show_data();
+        location.reload();
+        this.router.navigateByUrl('/home');
       }, error: (err) => {
         console.log(err);
       }
