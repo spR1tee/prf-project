@@ -7,10 +7,15 @@ import passport from 'passport';
 import { configurePassport } from './passport/passport';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import client from 'prom-client';
 
 const app = express();
 const port = 5000;
 const dbUrl = 'mongodb://172.100.0.30:27017/my_db';
+
+// Alapértelmezett metrikák gyűjtése 
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
 
 mongoose.connect(dbUrl).then((_) => {
     console.log('Successfully connected to MongoDB.');

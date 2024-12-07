@@ -4,10 +4,23 @@ import { User } from '../model/user';
 import { Content } from '../model/content';
 import client from 'prom-client';
 
-export const configureRoutes = (passport: PassportStatic, router: Router): Router => {
+// Kérés időtartam mérése histogrammal
+const httpRequestDurationMicroseconds = new client.Histogram({
+    name: 'http_request_duration_ms', 
+    help: 'Duration of HTTP requests in ms',
+   labelNames: ['method', 'route', 'status_code'] 
+});
 
-    const collectDefaultMetrics = client.collectDefaultMetrics; 
-    collectDefaultMetrics();
+export const configureRoutes = (passport: PassportStatic, router: Router): Router => {
+    // Middleware a metrikák gyűjtéséhez 
+    router.use((req: Request, res: Response, next: NextFunction) => { 
+        const end = httpRequestDurationMicroseconds.startTimer(); 
+        res.on('finish', () => { 
+            end({ route: req.route?.path || '', method: req.method, status_code: res.statusCode }); 
+        }); 
+        next(); 
+    });
+
 
     router.get('/', (req: Request, res: Response) => {
         res.status(200).send('Hello, World!');
@@ -19,10 +32,6 @@ export const configureRoutes = (passport: PassportStatic, router: Router): Route
         } catch (ex) {
             res.status(500).end(ex); 
         } 
-    });
-
-    router.get('/test', async (req: Request, res: Response) => {
-        res.status(200).send("szia");
     });
 
     router.post('/login', (req: Request, res: Response, next: NextFunction) => {
