@@ -2,29 +2,41 @@ import { Router, Request, Response, NextFunction } from "express";
 import { PassportStatic } from 'passport';
 import { User } from '../model/user';
 import { Content } from '../model/content';
-import client from 'prom-client';
+import client from 'prom-client'; // Importáljuk a prom-client csomagot 
+// Kérés időtartam mérése histogrammal
+const httpRequestDurationMicroseconds = new client.Histogram({
+     name: 'http_request_duration_ms', 
+     help: 'Duration of HTTP requests in ms',
+    labelNames: ['method', 'route', 'status_code'] 
+});
 
 export const configureRoutes = (passport: PassportStatic, router: Router): Router => {
-
-    router.get('/', (req: Request, res: Response) => {
-        res.status(200).send('Hello, World!');
+     // Middleware a metrikák gyűjtéséhez 
+    router.use((req: Request, res: Response, next: NextFunction) => { 
+        const end = httpRequestDurationMicroseconds.startTimer(); 
+        res.on('finish', () => { 
+            end({ route: req.route?.path || '', method: req.method, status_code: res.statusCode }); 
+        }); 
+        next(); 
     });
 
-    const collectDefaultMetrics = client.collectDefaultMetrics; 
-    collectDefaultMetrics();
-
-    router.get('/', (req: Request, res: Response) => {
-        res.status(200).send('Hello, World!');
-    });
-
-    router.get('/metrics', async (req: Request, res: Response) => {
-        try { res.set('Content-Type', client.register.contentType);
-                res.end(await client.register.metrics());
-        } catch (ex) {
+    // Metrikák végpontja
+    router.get('/metrics', async (req: Request, res: Response) => { 
+        try { 
+            res.set('Content-Type', client.register.contentType); 
+            res.end(await client.register.metrics()); 
+        } catch (ex) { 
             res.status(500).end(ex); 
-        } 
+        }
+    });
+ 
+    router.get('/', (req: Request, res: Response) => {
+        res.status(200).send('Hello, World!');
     });
 
+    router.get('/', (req: Request, res: Response) => {
+        res.status(200).send('Hello, World!');
+    });
 
     router.post('/login', (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('local', (error: string | null, user: typeof User) => {
