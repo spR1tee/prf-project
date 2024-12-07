@@ -29,7 +29,7 @@ export class ContentService {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    return this.http.post('http://172.100.0.10:5000/saveNewContent', body, {headers: headers});
+    return this.http.post('http://localhost:5000/saveNewContent', body, {headers: headers});
   }
 
   update(content: Content, owner: string, id: string) {
@@ -45,27 +45,27 @@ export class ContentService {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    return this.http.post('http://172.100.0.10:5000/saveNewContent?id=' + id, body, {headers: headers});
+    return this.http.post('http://localhost:5000/saveNewContent?id=' + id, body, {headers: headers});
   }
 
 
   getAll() {
-    return this.http.get<Content[]>('http://172.100.0.10:5000/getAllContent', {withCredentials: true});
+    return this.http.get<Content[]>('http://localhost:5000/getAllContent', {withCredentials: true});
   }
 
   delete(id: string) {
-    return this.http.delete('http://172.100.0.10:5000/deleteContent?id=' + id, {withCredentials: true});
+    return this.http.delete('http://localhost:5000/deleteContent?id=' + id, {withCredentials: true});
   }
 
   getOwnedContent(id: string) {
-    return this.http.get('http://172.100.0.10:5000/getOwnedContent?id=' + id, {withCredentials: true});
+    return this.http.get('http://localhost:5000/getOwnedContent?id=' + id, {withCredentials: true});
   }
 
   getEditContent(id: string) {
-    return this.http.get('http://172.100.0.10:5000/getEditContent?id=' + id, {withCredentials: true});
+    return this.http.get('http://localhost:5000/getEditContent?id=' + id, {withCredentials: true});
   }
 
   getViewContent(id: string) {
-    return this.http.get('http://172.100.0.10:5000/getViewContent?id=' + id, {withCredentials: true});
+    return this.http.get('http://localhost:5000/getViewContent?id=' + id, {withCredentials: true});
   }
 }
