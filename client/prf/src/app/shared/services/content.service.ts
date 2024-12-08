@@ -45,7 +45,7 @@ export class ContentService {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    return this.http.post('http://172.100.0.10:5000/saveNewContent?id=' + id, body, {headers: headers});
+    return this.http.post('http://172.100.0.10:5000/updateContent?id=' + id, body, {headers: headers});
   }
 
 
